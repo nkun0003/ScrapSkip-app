@@ -13,7 +13,7 @@ module.exports = {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
       },
       backgroundPosition: {
-        'custom-up': 'center 15%'
+        'custom-up': 'center 20%'
       },
       backgroundColor: {
         overlay: 'rgba(0, 0, 0, 0.5)'
