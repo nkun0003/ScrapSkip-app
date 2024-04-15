@@ -11,7 +11,18 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <header className="">
+          <div className="flex flex-col p-24 items-center justify-between bg-navbar-image bg-custom-up relative ">
+            <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+            <div className="relative z-10 p-4 text-white">
+              <h1 className=" font-semibold text-8xl">Scrap Skip</h1>
+              <h2 className="text-2xl pt-4">Get rid of your Crap now</h2>
+            </div>
+          </div>
+        </header>
+        {children}
+      </body>
     </html>
   );
 }
