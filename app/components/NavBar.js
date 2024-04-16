@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function Navbar() {
+export default function NavBar() {
   const router = useRouter();
 
-  // Function to determine if the link is active
   const isActive = (path) => {
     return router.pathname === path;
   };
