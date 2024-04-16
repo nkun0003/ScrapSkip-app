@@ -30,6 +30,9 @@ export default function SearchForm() {
           <option value="50">50 km</option>
         </select>
       </p>
+      <p className="text-sm">
+        ( Leave form blank to match everything within the indicated distance. )
+      </p>
     </form>
   );
 }

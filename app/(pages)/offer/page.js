@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Offer() {
+export default function page() {
   return (
     <div className="py-4 px-8">
       <p>Upload a post of your own crap here.</p>
