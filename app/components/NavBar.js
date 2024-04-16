@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export default function NavBar() {
-  const router = useRouter();
+  const pathname = usePathname();
 
+  // Function to determine if the link is active
   const isActive = (path) => {
-    return router.pathname === path;
+    return pathname === path;
   };
 
   return (
