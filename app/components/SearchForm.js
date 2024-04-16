@@ -7,7 +7,7 @@ export default function SearchForm() {
   return (
     <form className="py-4 px-6">
       <p className="flex flex-row gap-2 my-2 items-center">
-        <label for="search" className="py-1 px-2 text-right">
+        <label htmlFor="search" className="py-1 px-2 text-right">
           Search for some crap
         </label>
         <input type="text" placeholder="Keyword" className="text-black py-1 px-2" />
@@ -18,7 +18,7 @@ export default function SearchForm() {
         </button>
       </p>
       <p className="flex flex-row gap-2 my-2 items-center">
-        <label for="distance" className="py-1 px-2 basis-2/6 text-right ">
+        <label htmlFor="distance" className="py-1 px-2 basis-2/6 text-right ">
           Within
         </label>
         <select

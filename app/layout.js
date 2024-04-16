@@ -1,4 +1,3 @@
-// components/RootLayout.js
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/app/components/NavBar';
@@ -17,7 +16,6 @@ export default function RootLayout({ children }) {
               <h2 className="text-base md:text-2xl pt-2">Get rid of your crap now</h2>
             </div>
           </div>
-          <Navbar />
         </header>
         {children}
       </body>
