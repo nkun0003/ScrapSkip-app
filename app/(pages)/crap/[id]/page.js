@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
+('use client');
 export default function ItemDetailPage() {
   const router = useRouter();
   const { id } = router.query;

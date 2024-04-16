@@ -8,6 +8,7 @@
 
 'use client';
 
+import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import SearchForm from './components/SearchForm';
 import { LoginButton } from './components/LoginButton';
