@@ -1,31 +1,35 @@
-// import Image from 'next/image';
-// import { LoginButton } from './components/LoginButton';
-// import SearchForm from './components/SearchForm';
-
-// export default function Home() {
-//   return <main className="flex flex-col items-center justify-between">{/* <SearchForm /> */}</main>;
-// }
-
 'use client';
 
-import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import NavBar from './components/NavBar';
 import SearchForm from './components/SearchForm';
 import { LoginButton } from './components/LoginButton';
-import NavBar from './components/NavBar';
 
 export default function Home() {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = () => {
-    window.location.href = 'https://mad9124.ohohoh.ca/auth/google';
+  useEffect(() => {
+    // Check local storage for login status
+    if (localStorage.getItem('isLoggedIn')) {
+      setIsLoggedIn(true);
+    } else {
+      router.push('/'); // Redirect to login if not logged in
+    }
+  }, [router]);
+
+  const handleLoginSuccess = () => {
+    localStorage.setItem('isLoggedIn', 'true');
+    setIsLoggedIn(true);
+    router.push('/'); // Redirect to home after login
   };
 
   return (
     <div>
       <NavBar isLoggedIn={isLoggedIn} />
       <main className="flex flex-col items-center justify-center">
-        {!isLoggedIn ? <LoginButton onClick={handleLogin} /> : <SearchForm />}
+        {isLoggedIn ? <SearchForm /> : <LoginButton onLoginSuccess={handleLoginSuccess} />}
       </main>
     </div>
   );

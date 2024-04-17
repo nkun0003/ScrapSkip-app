@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import { fetchItemById, updateItemStatusById } from '../../../api/route';
 
 export default function ItemDetailPage() {
   const router = useRouter();
@@ -10,34 +11,19 @@ export default function ItemDetailPage() {
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
-    async function fetchItem() {
-      if (!id) return;
-      const response = await fetch(`https://mad9124.ohohoh.ca/api/crap/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setItem(data.item);
-      } else {
-        console.error('Failed to fetch item');
-      }
+    if (id) {
+      fetchItemById(id)
+        .then((data) => setItem(data.item))
+        .catch((error) => console.error('Failed to fetch item:', error));
     }
-    fetchItem();
   }, [id]);
 
   const handleStatusChange = async (newStatus, extraData = {}) => {
-    const response = await fetch(`https://mad9124.ohohoh.ca/api/crap/${id}/status`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-        // here i will Include authorization headers as necessary later once backend is done
-      },
-      body: JSON.stringify({ status: newStatus, ...extraData })
-    });
-
-    if (response.ok) {
-      const updatedItem = await response.json();
+    try {
+      const updatedItem = await updateItemStatusById(id, newStatus, extraData);
       setItem(updatedItem);
-    } else {
-      console.error('Failed to update item status');
+    } catch (error) {
+      console.error('Failed to update item status:', error);
     }
   };
 
@@ -48,8 +34,7 @@ export default function ItemDetailPage() {
       <h1 className="text-xl font-bold">{item.title}</h1>
       <p>{item.description}</p>
       <p>Status: {item.status}</p>
-
-      {/* Here just conditionally rendering based on status and user role */}
+      {/* Conditional rendering based on status and user role */}
       {item.status === 'AVAILABLE' && userData.id !== item.ownerId && (
         <button
           onClick={() => handleStatusChange('INTERESTED')}

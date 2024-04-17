@@ -2,11 +2,11 @@
 
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/app/components/NavBar';
+import NavBar from '@/app/components/NavBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, isLoggedIn }) {
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -19,6 +19,7 @@ export default function RootLayout({ children }) {
             </div>
           </div>
         </header>
+        {/* <NavBar isLoggedIn={isLoggedIn} /> */}
         {children}
       </body>
     </html>
