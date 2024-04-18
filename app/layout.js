@@ -1,16 +1,13 @@
-'use client';
-
 import { Inter } from 'next/font/google';
 import './globals.css';
-import NavBar from '@/app/components/NavBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function RootLayout({ children, isLoggedIn }) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="">
+        <header>
           <div className="flex flex-col p-14 items-center justify-between bg-navbar-image bg-custom-up relative">
             <div className="absolute inset-0 bg-black bg-opacity-60"></div>
             <div className="relative z-10 p-1 text-white">
@@ -19,7 +16,6 @@ export default function RootLayout({ children, isLoggedIn }) {
             </div>
           </div>
         </header>
-        {/* <NavBar isLoggedIn={isLoggedIn} /> */}
         {children}
       </body>
     </html>

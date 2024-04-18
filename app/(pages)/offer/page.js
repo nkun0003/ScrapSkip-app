@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import { postCrap } from '../../api/route';
+import NavBar from '@/app/components/NavBar';
 
-export default function page() {
+export default function Page() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -12,29 +13,34 @@ export default function page() {
 
   const handleChange = (event) => {
     const { name, value, files } = event.target;
-    setFormData((prev) => ({ ...prev, [name]: files ? files[0] : value }));
+    if (name === 'images') {
+      setFormData((prev) => ({ ...prev, images: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      data.append(key, value);
-    });
 
-    postCrap(data)
-      .then((response) => {
-        alert('Item posted successfully');
-        console.log(response);
-      })
-      .catch((error) => {
-        alert('Failed to post item');
-        console.error(error);
-      });
+    const data = new FormData();
+    for (const [key, value] of Object.entries(formData)) {
+      data.append(key, value);
+    }
+
+    try {
+      const response = await postCrap(data);
+      alert('Item posted successfully');
+      console.log(response);
+    } catch (error) {
+      alert('Failed to post item');
+      console.error(error);
+    }
   };
 
   return (
-    <div>
+    <main>
+      <header></header>
       <div className="py-4 px-8">
         <p>Upload a post of your own crap here.</p>
         <form onSubmit={handleSubmit}>
@@ -49,7 +55,8 @@ export default function page() {
               placeholder="title"
               className="text-black text-lg py-1 px-2 basis-3/4"
               type="text"
-              name="title"></input>
+              name="title"
+            />
           </p>
           <p className="my-2 flex flex-row items-start gap-3">
             <label htmlFor="description" className="text-slate-200 text-lg basis-1/4">
@@ -61,7 +68,8 @@ export default function page() {
               value={formData.description}
               onChange={handleChange}
               placeholder="description"
-              className="text-slate-800 text-lg py-1 px-2 basis-3/4"></textarea>
+              className="text-slate-800 text-lg py-1 px-2 basis-3/4"
+            />
           </p>
           <p className="my-2 flex flex-row items-start gap-3">
             <label htmlFor="images" className="text-slate-200 text-lg basis-1/4">
@@ -73,7 +81,8 @@ export default function page() {
               accept="image/*"
               className="bg-slate-600 text-white text-lg py-1 px-2 mx-0 basis-3/4"
               type="file"
-              name="images"></input>
+              name="images"
+            />
           </p>
           <p className="my-2 flex flex-row">
             <button
@@ -84,6 +93,6 @@ export default function page() {
           </p>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
