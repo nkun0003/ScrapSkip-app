@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { postCrap } from '../../api/route';
-import NavBar from '@/app/components/NavBar';
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -40,7 +39,6 @@ export default function Page() {
 
   return (
     <main>
-      <header></header>
       <div className="py-4 px-8">
         <p>Upload a post of your own crap here.</p>
         <form onSubmit={handleSubmit}>

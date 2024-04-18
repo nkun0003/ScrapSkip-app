@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Logout from './LogoutButton';
 
 export default function NavBar({ token }) {
   const pathname = usePathname();
@@ -40,7 +41,7 @@ export default function NavBar({ token }) {
             } hover:text-white md:text-2xl`}>
             Wiped
           </Link>
-          <button className="p-1 text-slate-300 hover:text-white md:text-2xl">Logout</button>
+          <Logout />
         </>
       )}
     </nav>

@@ -1,9 +1,14 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { getSession } from '@/app/actions';
+import NavBar from './components/NavBar';
+import SearchForm from './components/SearchForm';
+import { LoginButton } from './components/LoginButton';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  let token = await getSession();
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -16,6 +21,7 @@ export default function RootLayout({ children }) {
             </div>
           </div>
         </header>
+        <NavBar token={token?.value} />
         {children}
       </body>
     </html>

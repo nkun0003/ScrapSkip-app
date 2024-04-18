@@ -5,12 +5,5 @@ import { getSession } from '@/app/actions';
 
 export default async function Home() {
   let token = await getSession(); //called from server-side can accept a return value
-  return (
-    <main>
-      <header>
-        <NavBar token={token?.value} />
-      </header>
-      {token?.value ? <SearchForm /> : <LoginButton />}
-    </main>
-  );
+  return <main>{token?.value ? <SearchForm /> : <LoginButton />}</main>;
 }
