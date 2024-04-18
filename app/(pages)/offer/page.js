@@ -1,41 +1,41 @@
 'use client';
 
 import React, { useState } from 'react';
-import { postCrap } from '../../api/route';
+import { postCrap } from '@/app/api/route';
 
 export default function Page() {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    images: null
-  });
+  // const [formData, setFormData] = useState({
+  //   title: '',
+  //   description: '',
+  //   images: null
+  // });
 
-  const handleChange = (event) => {
-    const { name, value, files } = event.target;
-    if (name === 'images') {
-      setFormData((prev) => ({ ...prev, images: files[0] }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+  // const handleChange = (event) => {
+  //   const { name, value, files } = event.target;
+  //   if (name === 'images') {
+  //     setFormData((prev) => ({ ...prev, images: files[0] }));
+  //   } else {
+  //     setFormData((prev) => ({ ...prev, [name]: value }));
+  //   }
+  // };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-    const data = new FormData();
-    for (const [key, value] of Object.entries(formData)) {
-      data.append(key, value);
-    }
+  //   const data = new FormData();
+  //   for (const [key, value] of Object.entries(formData)) {
+  //     data.append(key, value);
+  //   }
 
-    try {
-      const response = await postCrap(data);
-      alert('Item posted successfully');
-      console.log(response);
-    } catch (error) {
-      alert('Failed to post item');
-      console.error(error);
-    }
-  };
+  //   try {
+  //     const response = await postCrap(data);
+  //     alert('Item posted successfully');
+  //     console.log(response);
+  //   } catch (error) {
+  //     alert('Failed to post item');
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <main>

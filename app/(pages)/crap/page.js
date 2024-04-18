@@ -2,40 +2,54 @@
 
 import React, { useEffect, useState } from 'react';
 import { fetchAllCrap } from '@/app/api/route';
-import NavBar from '@/app/components/NavBar';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CrapPage() {
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
-    fetchAllCrap()
-      .then((data) => {
+    if (!router.isReady) return;
+
+    const fetchData = async () => {
+      try {
+        // Here using router.query to get search parameters
+        const data = await fetchAllCrap(router.query);
         setItems(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Failed to fetch items:', error);
-        setError('Failed to load items');
-        setLoading(false);
-      });
-  }, []);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
 
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
+    fetchData();
+  }, [router.isReady, router.query]); // This is just dependency on router.query to refetch when query changes
 
+  if (error) {
+    return <p>Error loading items: {error}</p>;
+  }
+
+  // Created a condition to display a message if there is no crap, if there is one then display the unordered list
   return (
-    <main>
-      <NavBar />
-      <div className="py-4 px-8">
-        {items.map((item) => (
-          <div key={item.id} className="bg-slate-100 rounded-lg p-4 my-2">
-            <h3 className="text-lg font-bold">{item.title}</h3>
-            <p>{item.description}</p>
-          </div>
-        ))}
-      </div>
-    </main>
+    <div>
+      <h1>Available Crap</h1>
+      {items.length === 0 ? (
+        <p>No items found.</p>
+      ) : (
+        <ul>
+          {items.map((item) => (
+            <li key={item.id}>
+              <Link href={`/crap/${item.id}`}>
+                <a>
+                  <h2>{item.title}</h2>
+                  <p>{item.description}</p>
+                </a>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

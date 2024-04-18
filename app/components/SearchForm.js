@@ -14,7 +14,12 @@ export default function SearchForm() {
             style={{ width: '20%' }}>
             Search for some crap
           </label>
-          <input type="text" placeholder="Keyword" className="text-black py-1 px-2 flex-grow" />
+          <input
+            type="text"
+            name="keyword"
+            placeholder="Keyword"
+            className="text-black py-1 px-2 flex-grow"
+          />
           <button
             type="submit"
             className="rounded-lg bg-blue-500 text-slate-300 hover:text-white py-1 px-4 text-center">
