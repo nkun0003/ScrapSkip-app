@@ -22,35 +22,27 @@ export default function Page() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Log the formData state to debug
+    console.log('Form Data: ', formData);
     const { title, description, image } = formData;
 
     if (!title || !description || !image) {
       setError('All fields are required.');
-      return;
-    }
-
-    // Initialize token variable
-    let token;
-
-    const cookieToken = document.cookie.split('; ').find((row) => row.startsWith('authToken='));
-    if (cookieToken) {
-      token = cookieToken.split('=')[1];
-    }
-
-    if (!token) {
-      setError('You must be logged in to post an item.');
+      console.log('Validation failed: ', { title, description, image });
       return;
     }
 
     const data = new FormData();
     data.append('title', title);
     data.append('description', description);
-    data.append('image', image);
+    for (let i = 0; i < images.length; i++) {
+      data.append('images', images[i]);
+    }
 
     setLoading(true);
     try {
-      await createCrap(data, token);
-      // ...success handling...
+      await createCrap(data);
     } catch (err) {
       setError(err.message);
     } finally {
