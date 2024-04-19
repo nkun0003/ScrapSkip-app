@@ -9,19 +9,20 @@ export default function MinePage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const loadItems = async () => {
+    const loadData = async () => {
       setLoading(true);
       try {
-        const data = await fetchMyItems(); // Fetch items posted by the user
+        const token = localStorage.getItem('token');
+        const data = await fetchMyItems(token);
         setItems(data);
       } catch (error) {
-        setError('Failed to load items');
+        setError(error.message);
       } finally {
         setLoading(false);
       }
     };
 
-    loadItems();
+    loadData();
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -34,7 +35,6 @@ export default function MinePage() {
         {items.map((item) => (
           <li key={item.id}>
             {item.title} - {item.status}
-            {/* Add buttons or links for editing, deleting, or updating status */}
           </li>
         ))}
       </ul>

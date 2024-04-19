@@ -12,6 +12,23 @@ export async function fetchAllCrap(queryParams = {}) {
   return await response.json();
 }
 
+// Function to fetch all items posted by the logged-in user
+export async function fetchMyItems(token) {
+  const response = await fetch(`${BASE_URL}/mine`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text(); // More detailed error info
+    throw new Error('Failed to fetch my items: ' + errorText);
+  }
+  return await response.json();
+}
+
 // Function to fetch details of a specific item
 export async function fetchCrapDetails(id) {
   const response = await fetch(`${BASE_URL}/${id}`);
@@ -90,4 +107,35 @@ async function postStatusChange(url, data = {}) {
     throw new Error('Failed to change status');
   }
   return await response.json();
+}
+
+// The below are the wrap up functions for 3 above functions, this just to handles the error and helping for debugging too
+export async function handleInterest(id) {
+  try {
+    console.log(`Marking interest for item ${id}`);
+    return await markInterested(id);
+  } catch (error) {
+    console.error(`Error marking interest for item ${id}: ${error}`);
+    throw error;
+  }
+}
+
+export async function handleSuggestPickup(id, data) {
+  try {
+    console.log(`Suggesting pickup for item ${id}`);
+    return await suggestPickup(id, data);
+  } catch (error) {
+    console.error(`Error suggesting pickup for item ${id}: ${error}`);
+    throw error;
+  }
+}
+
+export async function handleAgreeToPickup(id) {
+  try {
+    console.log(`Agreeing to pickup for item ${id}`);
+    return await agreeToPickup(id);
+  } catch (error) {
+    console.error(`Error agreeing to pickup for item ${id}: ${error}`);
+    throw error;
+  }
 }

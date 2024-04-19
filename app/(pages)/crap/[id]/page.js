@@ -1,15 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { fetchCrapDetails, markInterested, suggestPickup, agreeToPickup } from '@/app/api/route';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { fetchCrapDetails, markInterested } from '@/app/api/route';
+import { useRouter } from 'next/router';
 
 export default function CrapDetailPage() {
+  const router = useRouter();
   const [item, setItem] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const { id } = router.query;
@@ -34,7 +33,6 @@ export default function CrapDetailPage() {
     try {
       await markInterested(item.id);
       alert('Interest marked!');
-      // Reload or update local state to reflect the change
     } catch (error) {
       setError('Failed to mark interest: ' + error.message);
     }
@@ -48,7 +46,7 @@ export default function CrapDetailPage() {
     <div>
       <h1>{item.title}</h1>
       <p>{item.description}</p>
-      <button onClick={handleInterest}>I&apos;m Interested</button>
+      <button onClick={handleInterest}>I'm Interested</button>
     </div>
   );
 }
