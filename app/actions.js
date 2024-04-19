@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 export async function login(response, token) {
   //set the cookie
   console.log('LOGIN SET', token);
-  const expires = new Date(Date.now() + 60 * 1000); //60 seconds expiry for the token cookie
+  const expires = new Date(Date.now() + 120 * 1000); //120 seconds expiry for the token cookie
   await response.cookies.set('token', token, {
     path: '/',
     secure: process.env.NODE_ENV === 'production',

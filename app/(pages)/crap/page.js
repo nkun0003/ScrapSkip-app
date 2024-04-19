@@ -40,7 +40,7 @@ export default function CrapPage() {
   const searchInput = router.query && router.query.keyword ? router.query.keyword : 'searched crap';
 
   return (
-    <div>
+    <div className="text-center mt-10">
       <h1>Available Crap</h1>
       <h2>
         There are {items.length} AVAILABLE matches for {searchInput}

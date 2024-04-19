@@ -109,6 +109,20 @@ async function postStatusChange(url, data = {}) {
   return await response.json();
 }
 
+// This function to call flushed items
+export async function fetchWipedItems() {
+  const response = await fetch(`${BASE_URL}/wiped`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch wiped items');
+  }
+  return await response.json();
+}
+
 // The below are the wrap up functions for 3 above functions, this just to handles the error and helping for debugging too
 export async function handleInterest(id) {
   try {
