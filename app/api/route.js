@@ -1,6 +1,6 @@
 'use server';
-// import fetch from 'node-fetch';
-const BASE_URL = 'https://mad9124.ohohoh.ca/api/crap';
+
+const BASE_URL = 'https://scrap-skipapi.onrender.com/api/crap';
 
 // Function to fetch all items excluding taken ones
 export async function fetchAllCrap(queryParams = {}) {
@@ -40,12 +40,12 @@ export async function fetchCrapDetails(id) {
 
 // Function to create a new item
 export async function createCrap(data, token) {
-  const response = await fetch('https://mad9124.ohohoh.ca/api/crap', {
+  const response = await fetch('https://scrap-skipapi.onrender.com/api/crap', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${token}` // Add the Authorization header with the token
+      Authorization: `Bearer ${token}`
     },
-    body: data // FormData will automatically set the 'Content-Type: multipart/form-data' header and include the boundary
+    body: data
   });
   const result = await response.text();
   if (!response.ok) {
