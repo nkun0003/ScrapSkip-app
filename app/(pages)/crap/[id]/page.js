@@ -46,7 +46,7 @@ export default function CrapDetailPage() {
     <div>
       <h1>{item.title}</h1>
       <p>{item.description}</p>
-      <button onClick={handleInterest}>I'm Interested</button>
+      <button onClick={handleInterest}>I&lsquo;m Interested</button>
     </div>
   );
 }
