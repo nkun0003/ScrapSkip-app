@@ -1,83 +1,54 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { fetchCrapDetails, markInterested, suggestPickup, agreeToPickup } from '@/app/api/route';
 import { useRouter } from 'next/navigation';
-import { fetchItemById, updateItemStatusById } from '../../../api/route';
-import NavBar from '@/app/components/NavBar';
+import Link from 'next/link';
 
-export default function ItemDetailPage() {
-  const router = useRouter();
-  const { id } = router.query;
+export default function CrapDetailPage() {
   const [item, setItem] = useState(null);
-  const [userData, setUserData] = useState({});
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    if (id) {
-      fetchItemById(id)
-        .then((data) => setItem(data.item))
-        .catch((error) => console.error('Failed to fetch item:', error));
-    }
-  }, [id]);
+    const { id } = router.query;
+    if (!router.isReady || !id) return;
 
-  const handleStatusChange = async (newStatus, extraData = {}) => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchCrapDetails(id);
+        setItem(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [router.isReady, router.query]);
+
+  const handleInterest = async () => {
     try {
-      const updatedItem = await updateItemStatusById(id, newStatus, extraData);
-      setItem(updatedItem);
+      await markInterested(item.id);
+      alert('Interest marked!');
+      // Reload or update local state to reflect the change
     } catch (error) {
-      console.error('Failed to update item status:', error);
+      setError('Failed to mark interest: ' + error.message);
     }
   };
 
-  if (!item) return <div>Loading...</div>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!item) return <p>No item found.</p>;
 
   return (
-    <main>
-      <NavBar />
-      <div className="py-4 px-8">
-        <h1 className="text-xl font-bold">{item.title}</h1>
-        <p>{item.description}</p>
-        <p>Status: {item.status}</p>
-        {/* Conditional rendering based on status and user role */}
-        {item.status === 'AVAILABLE' && userData.id !== item.ownerId && (
-          <button
-            onClick={() => handleStatusChange('INTERESTED')}
-            className="bg-green-500 text-white py-1 px-2 rounded-lg">
-            Express Interest
-          </button>
-        )}
-        {item.status === 'INTERESTED' && userData.id === item.ownerId && (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleStatusChange('SUGGESTED', {
-                address: e.target.address.value,
-                pickupDate: e.target.pickupDate.value,
-                pickupTime: e.target.pickupTime.value
-              });
-            }}>
-            <input name="address" placeholder="Address" required />
-            <input type="date" name="pickupDate" required />
-            <input name="pickupTime" placeholder="Time range" required />
-            <button type="submit" className="bg-blue-500 text-white py-1 px-2 rounded-lg">
-              Set Pickup Details
-            </button>
-          </form>
-        )}
-        {item.status === 'SUGGESTED' && userData.id !== item.ownerId && (
-          <button
-            onClick={() => handleStatusChange('AGREED')}
-            className="bg-yellow-500 text-white py-1 px-2 rounded-lg">
-            Agree to Pickup
-          </button>
-        )}
-        {item.status === 'AGREED' && userData.id === item.ownerId && (
-          <button
-            onClick={() => handleStatusChange('FLUSHED')}
-            className="bg-red-500 text-white py-1 px-2 rounded-lg">
-            Mark as Flushed
-          </button>
-        )}
-      </div>
-    </main>
+    <div>
+      <h1>{item.title}</h1>
+      <p>{item.description}</p>
+      <button onClick={handleInterest}>I'm Interested</button>
+    </div>
   );
 }

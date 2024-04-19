@@ -8,32 +8,43 @@ import { useRouter } from 'next/navigation';
 export default function CrapPage() {
   const [items, setItems] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router.isReady || !router.query) return; // This just Check both for readiness and existence of query
 
     const fetchData = async () => {
+      setLoading(true);
       try {
-        // Here using router.query to get search parameters
         const data = await fetchAllCrap(router.query);
         setItems(data);
       } catch (err) {
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [router.isReady, router.query]); // This is just dependency on router.query to refetch when query changes
+  }, [router.isReady, router.query]);
 
   if (error) {
     return <p>Error loading items: {error}</p>;
   }
 
-  // Created a condition to display a message if there is no crap, if there is one then display the unordered list
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  const searchInput = router.query && router.query.keyword ? router.query.keyword : 'searched crap';
+
   return (
     <div>
       <h1>Available Crap</h1>
+      <h2>
+        There are {items.length} AVAILABLE matches for {searchInput}
+      </h2>
       {items.length === 0 ? (
         <p>No items found.</p>
       ) : (

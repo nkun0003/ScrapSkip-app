@@ -22,18 +22,20 @@ export async function fetchCrapDetails(id) {
 }
 
 // Function to create a new item
-export async function createCrap(data) {
-  const response = await fetch(`${BASE_URL}`, {
+export async function createCrap(data, token) {
+  const response = await fetch('https://mad9124.ohohoh.ca/api/crap', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}` // Add the Authorization header with the token
     },
-    body: JSON.stringify(data)
+    body: data // FormData will automatically set the 'Content-Type: multipart/form-data' header and include the boundary
   });
+  const result = await response.text();
   if (!response.ok) {
-    throw new Error('Failed to create item');
+    console.error(result); // Log the full server response for debugging
+    throw new Error('Failed to create item: ' + result);
   }
-  return await response.json();
+  return JSON.parse(result); // Parse JSON manually after checking the response
 }
 
 // Function to update an item
@@ -62,7 +64,7 @@ export async function deleteCrap(id) {
   return await response.json();
 }
 
-// Additional functions for interested, suggest, agree, etc.
+// These below functions for interested, suggest, agree, etc.
 export async function markInterested(id) {
   return await postStatusChange(`${BASE_URL}/${id}/interested`);
 }

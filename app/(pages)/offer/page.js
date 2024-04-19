@@ -1,41 +1,62 @@
 'use client';
 
 import React, { useState } from 'react';
-import { postCrap } from '@/app/api/route';
+import { createCrap } from '@/app/api/route';
 
 export default function Page() {
-  // const [formData, setFormData] = useState({
-  //   title: '',
-  //   description: '',
-  //   images: null
-  // });
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    image: null
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // const handleChange = (event) => {
-  //   const { name, value, files } = event.target;
-  //   if (name === 'images') {
-  //     setFormData((prev) => ({ ...prev, images: files[0] }));
-  //   } else {
-  //     setFormData((prev) => ({ ...prev, [name]: value }));
-  //   }
-  // };
+  const handleChange = (event) => {
+    const { name, type, value, files } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'file' ? files[0] : value
+    }));
+  };
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const { title, description, image } = formData;
 
-  //   const data = new FormData();
-  //   for (const [key, value] of Object.entries(formData)) {
-  //     data.append(key, value);
-  //   }
+    if (!title || !description || !image) {
+      setError('All fields are required.');
+      return;
+    }
 
-  //   try {
-  //     const response = await postCrap(data);
-  //     alert('Item posted successfully');
-  //     console.log(response);
-  //   } catch (error) {
-  //     alert('Failed to post item');
-  //     console.error(error);
-  //   }
-  // };
+    // Initialize token variable
+    let token;
+
+    const cookieToken = document.cookie.split('; ').find((row) => row.startsWith('authToken='));
+    if (cookieToken) {
+      token = cookieToken.split('=')[1];
+    }
+
+    if (!token) {
+      setError('You must be logged in to post an item.');
+      return;
+    }
+
+    const data = new FormData();
+    data.append('title', title);
+    data.append('description', description);
+    data.append('image', image);
+
+    setLoading(true);
+    try {
+      await createCrap(data, token);
+      // ...success handling...
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main>
@@ -79,14 +100,16 @@ export default function Page() {
               accept="image/*"
               className="bg-slate-600 text-white text-lg py-1 px-2 mx-0 basis-3/4"
               type="file"
-              name="images"
+              name="image"
             />
           </p>
+          {error && <p className="text-red-500">{error}</p>}
           <p className="my-2 flex flex-row">
             <button
               type="submit"
-              className="rounded-lg bg-yellow-500 text-slate-800 text-lg py-1 px-2">
-              Upload
+              className="rounded-lg bg-yellow-500 text-slate-800 text-lg py-1 px-2"
+              disabled={loading}>
+              {loading ? 'Uploading...' : 'Upload'}
             </button>
           </p>
         </form>
