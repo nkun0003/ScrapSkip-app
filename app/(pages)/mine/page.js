@@ -1,36 +1,57 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import NavBar from '@/app/components/NavBar'; // Make sure the path is correct for your NavBar component
+import { fetchMyItems } from '@/app/api/route'; // Adjust path as necessary
 
-export default function WipedPage() {
-  const router = useRouter();
-  const { status } = router.query;
+export default function MinePage() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const getStatusMessage = () => {
-    switch (status) {
-      case 'flushed':
-        return 'This item has already been flushed (sold).';
-      case 'not-found':
-        return 'This item could not be found.';
-      case 'negotiation':
-        return 'This item is currently under negotiation and not available.';
-      default:
-        return 'The requested item does not exist or an invalid status was provided.';
+  useEffect(() => {
+    loadItems();
+  }, []);
+
+  const loadItems = async () => {
+    setLoading(true);
+    try {
+      const myItems = await fetchMyItems(); // This should fetch the items posted by the logged-in user
+      setItems(myItems);
+    } catch (err) {
+      setError('Failed to fetch items: ' + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main>
-      <div className="text-center mt-10">
-        <h2 className="text-xl px-6 py-2 text-green-600">
-          {getStatusMessage()} {/* Dynamic message based on the item's status */}
-        </h2>
-        <button
-          onClick={() => router.push('/')}
-          className="mt-4 px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-700 transition duration-300">
-          Return to Home
-        </button>
+      <div className="container mx-auto px-4">
+        <h1 className=" text-center text-xl font-semibold text-white my-4">My Posted Items</h1>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          <div>
+            {items.length > 0 ? (
+              <ul className="space-y-4">
+                {items.map((item) => (
+                  <li key={item.id} className="p-4 border rounded shadow-sm">
+                    <h2 className="text-lg font-bold">{item.title}</h2>
+                    <p>{item.description}</p>
+                    <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 rounded-full uppercase font-semibold tracking-wide">
+                      {item.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No items to display.</p>
+            )}
+          </div>
+        )}
       </div>
     </main>
   );
